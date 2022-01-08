@@ -1,4 +1,5 @@
 ﻿using ChallengeSpaceFlightNews.webApi.Domains;
+using ChallengeSpaceFlightNews.webApi.DTOs;
 using ChallengeSpaceFlightNews.webApi.Interfaces;
 using FluentAssertions;
 using SpaceFlightNewsTestes.Integracao.Fakers;
@@ -74,6 +75,46 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
                 .BeEquivalentTo(articles);
         }
 
+        #endregion
+
+        #region Teste de Cadastrar
+
+        [Fact]
+        public async Task CadastrarDeveRetornar201CreatedQuandoCadastroForExecutadoCorretamente()
+        {
+            var article = new CriarArticleDTOBuilder().Generate();
+
+            var resposta = await Client.PostAsJsonAsync("/Articles", article);
+
+            resposta.Should()
+                .Be201Created();
+        }
+
+        [Fact]
+        public async Task CadastrarDeveSalvarArticleNoBanco()
+        {
+            var article = new CriarArticleDTOBuilder().Generate();
+
+            var resposta = await Client.PostAsJsonAsync("/Articles", article);
+
+            var articleRetornado = await resposta.Content.ReadFromJsonAsync<Article>();
+
+            var articleNoBanco = Context.Articles.FirstOrDefault(x => x.Id == articleRetornado.Id);
+
+            articleRetornado.Should()
+                .BeEquivalentTo(articleNoBanco);
+        }
+
+        [Fact]
+        public async Task CadastrarDeveRetornar400BadRequestSeOsCamposNaoForemPreenchidosCorretamente()
+        {
+            var articleVazio = new CriarArticleDTO();
+
+            var resposta = await Client.PostAsJsonAsync("/Articles", articleVazio);
+
+            resposta.Should()
+                .Be400BadRequest();
+        }
         #endregion
 
     }

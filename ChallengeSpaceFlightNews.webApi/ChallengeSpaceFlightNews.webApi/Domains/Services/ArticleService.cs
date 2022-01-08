@@ -27,10 +27,6 @@ namespace ChallengeSpaceFlightNews.webApi.Domains.Services
 
         public async Task<Article> CadastrarAsync(CriarArticleDTO novoArticle)
         {
-            novoArticle.Validar();
-            if (!novoArticle.IsValid)
-                return null;
-
             var articleMapeado = _mapper.Map<Article>(novoArticle);
 
             articleMapeado.Id = ((await _articleRepository.ListarArticlesAsync()).Count() + 1).ToString();

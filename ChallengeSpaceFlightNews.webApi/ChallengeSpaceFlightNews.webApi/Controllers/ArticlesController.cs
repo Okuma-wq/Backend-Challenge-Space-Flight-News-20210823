@@ -47,6 +47,10 @@ namespace ChallengeSpaceFlightNews.webApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Article>> Cadastrar(CriarArticleDTO novoArticle)
         {
+            novoArticle.Validar();
+            if (!novoArticle.IsValid)
+                return BadRequest(novoArticle.Notifications);
+
             var resposta = await _articleService.CadastrarAsync(novoArticle);
 
             return Created("", resposta);

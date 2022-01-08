@@ -12,8 +12,8 @@ namespace ChallengeSpaceFlightNews.webApi.DTOs
         public string Title { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
         public string ImageUrl { get; set; }
-        public string NewsSite { get; set; }
-        public string Summary { get; set; }
+        public string NewsSite { get; set; } = string.Empty;
+        public string Summary { get; set; } = string.Empty;
         public bool Featured { get; set; } = false;
 
         public void Validar()
