@@ -144,6 +144,54 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
                 .BeEquivalentTo(article);
         }
 
+        [Fact]
+        public async Task BuscarPorIdDeveRetornar404NotFoundSeIdNaoCorresponderAUmArticleSalvoNoBanco()
+        {
+            var resposta = await Client.GetAsync($"/Articles/1");
+
+            resposta.Should()
+                .Be404NotFound();
+        }
+
+        #endregion
+
+        #region Teste Deletar
+
+        [Fact]
+        public async Task DeletarDeveRetornar200OkSeOArticleForRemovido()
+        {
+            var articles = await PersistirArticleNoBanco();
+            var article = articles.FirstOrDefault();
+
+            var resposta = await Client.DeleteAsync($"/Articles/{article.Id}");
+
+            resposta.Should()
+                .Be200Ok();
+        }
+
+        [Fact]
+        public async Task DeletarDeveRemoverOArticleDoBanco()
+        {
+            var articles = await PersistirArticleNoBanco();
+            var article = articles.FirstOrDefault();
+
+            await Client.DeleteAsync($"/Articles/{article.Id}");
+
+            var retorno = await _articleRepository.BuscarPorId(article.Id);
+
+            retorno.Should()
+                .BeNull();
+        }
+
+        [Fact]
+        public async Task DeletarDeveRetornar404NotFoundSeOIdUtilizadoNaoCorresponderAUmArticle()
+        {
+            var resposta = await Client.DeleteAsync($"/Articles/1");
+
+            resposta.Should()
+                .Be404NotFound();
+        }
+
         #endregion
 
     }
