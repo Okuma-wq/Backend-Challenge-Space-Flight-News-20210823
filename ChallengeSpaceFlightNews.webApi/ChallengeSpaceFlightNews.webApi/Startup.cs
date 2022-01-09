@@ -45,7 +45,7 @@ namespace ChallengeSpaceFlightNews.webApi
                });
             
 
-            services.AddDbContext<SpaceFlightNewsContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SpaceFlightNewsContext>(x => x.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
 
 

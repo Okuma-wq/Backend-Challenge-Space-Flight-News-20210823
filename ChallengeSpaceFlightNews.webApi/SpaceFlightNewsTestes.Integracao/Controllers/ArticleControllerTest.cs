@@ -47,9 +47,11 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
         [Fact]
         public async Task DefaultMethodDeveRetornarStringEsperada()
         {
-            var resposta = await Client.GetFromJsonAsync<string>("/");
+            var resposta = await Client.GetAsync("/");
 
-            resposta.Should()
+            var conteudo = await resposta.Content.ReadAsStringAsync();
+
+            conteudo.Should()
                 .BeEquivalentTo("Back - end Challenge 2021 🏅 -Space Flight News");
         }
 
@@ -74,7 +76,10 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
             var resposta = await Client.GetFromJsonAsync<IEnumerable<Article>>("/Articles");
 
             resposta.Should()
-                .BeEquivalentTo(articles);
+                .BeEquivalentTo(articles, options => options
+                    .Using<DateTime>(context => context.Subject.Should()
+                    .BeCloseTo(context.Expectation, TimeSpan.FromSeconds(1)))
+                    .WhenTypeIs<DateTime>());
         }
 
         #endregion
@@ -143,7 +148,10 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
             var resposta = await Client.GetFromJsonAsync<Article>($"/Articles/{article.Id}");
 
             resposta.Should()
-                .BeEquivalentTo(article);
+                .BeEquivalentTo(article, options => options
+                    .Using<DateTime>(context => context.Subject.Should()
+                    .BeCloseTo(context.Expectation, TimeSpan.FromSeconds(1)))
+                    .WhenTypeIs<DateTime>());
         }
 
         [Fact]
@@ -230,7 +238,10 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
             var articleNobanco = await _articleRepository.BuscarPorIdAsync(article.Id);
 
             articleNobanco.Should()
-                .BeEquivalentTo(articleAlterado);
+                .BeEquivalentTo(articleAlterado, options => options
+                    .Using<DateTime>(context => context.Subject.Should()
+                    .BeCloseTo(context.Expectation, TimeSpan.FromSeconds(1)))
+                    .WhenTypeIs<DateTime>());
         }
 
         [Fact]

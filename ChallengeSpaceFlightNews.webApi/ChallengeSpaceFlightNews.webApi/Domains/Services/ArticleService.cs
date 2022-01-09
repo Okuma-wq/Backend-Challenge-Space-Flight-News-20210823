@@ -20,28 +20,28 @@ namespace ChallengeSpaceFlightNews.webApi.Domains.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Article>> ListarArticlesAsync()
+        public async Task<IEnumerable<Article>> ListarArticlesAsync(int? inicial, int? qtd)
         {
-            return await _articleRepository.ListarArticlesAsync();
+            var initial = inicial ?? 0;
+            var quantidade = qtd ?? 5;
+            return await _articleRepository.ListarArticlesAsync(initial, quantidade);
         }
 
         public async Task<Article> CadastrarAsync(CriarArticleDTO novoArticle)
         {
             var articleMapeado = _mapper.Map<Article>(novoArticle);
 
-            articleMapeado.Id = ((await _articleRepository.ListarArticlesAsync()).Count() + 1).ToString();
-
             await _articleRepository.CadastrarAsync(articleMapeado);
 
             return articleMapeado;
         }
 
-        public async Task<Article> BuscarPorId(string id)
+        public async Task<Article> BuscarPorId(int id)
         {
             return await _articleRepository.BuscarPorIdAsync(id);
         }
 
-        public async Task<bool> DeletarAsync(string id)
+        public async Task<bool> DeletarAsync(int id)
         {
             var article = await _articleRepository.BuscarPorIdAsync(id);
             if (article == null)
@@ -51,7 +51,7 @@ namespace ChallengeSpaceFlightNews.webApi.Domains.Services
             return true;
         }
 
-        public async Task<Article> AlterarAsync(string id, AlterarArticleDTO alteracoes)
+        public async Task<Article> AlterarAsync(int id, AlterarArticleDTO alteracoes)
         {
             var articleNoBanco = await _articleRepository.BuscarPorIdAsync(id);
             if (articleNoBanco == null)

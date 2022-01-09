@@ -4,6 +4,7 @@ using ChallengeSpaceFlightNews.webApi.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ChallengeSpaceFlightNews.webApi.Repositories
 {
@@ -22,7 +23,7 @@ namespace ChallengeSpaceFlightNews.webApi.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Article> BuscarPorIdAsync(string id)
+        public async Task<Article> BuscarPorIdAsync(int id)
         {
             return await _context.Articles
                 .AsNoTracking()
@@ -41,10 +42,11 @@ namespace ChallengeSpaceFlightNews.webApi.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Article>> ListarArticlesAsync()
+        public async Task<IEnumerable<Article>> ListarArticlesAsync(int inicial, int qtd)
         {
             return await _context.Articles
                 .AsNoTracking()
+                .Skip(inicial).Take(qtd)
                 .ToListAsync();
         }
     }

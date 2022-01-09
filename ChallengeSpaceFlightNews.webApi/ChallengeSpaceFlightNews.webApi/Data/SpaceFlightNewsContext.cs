@@ -1,6 +1,6 @@
 ﻿using ChallengeSpaceFlightNews.webApi.Domains;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ namespace ChallengeSpaceFlightNews.webApi.Data
     {
         public SpaceFlightNewsContext(DbContextOptions<SpaceFlightNewsContext> options) : base(options)
         {
-            var sqlServerOptionsExtension =
-                options.FindExtension<SqlServerOptionsExtension>();
-            StringConnection = sqlServerOptionsExtension.ConnectionString;
+            var npgSqlOptionsExtension =
+                options.FindExtension<NpgsqlOptionsExtension>();
+            StringConnection = npgSqlOptionsExtension.ConnectionString;
         }
 
         public string StringConnection { get; }
@@ -35,7 +35,6 @@ namespace ChallengeSpaceFlightNews.webApi.Data
 
             // Provider
             modelBuilder.Entity<Launch>().Property(x => x.Provider).HasMaxLength(100);
-            modelBuilder.Entity<Launch>().Property(x => x.Provider).HasColumnType("varchar(100)");
             modelBuilder.Entity<Launch>().Property(x => x.Provider).IsRequired();
 
             // Foreign Key ArticleId
@@ -52,7 +51,6 @@ namespace ChallengeSpaceFlightNews.webApi.Data
 
             // Provider
             modelBuilder.Entity<Event>().Property(x => x.Provider).HasMaxLength(100);
-            modelBuilder.Entity<Event>().Property(x => x.Provider).HasColumnType("varchar(100)");
             modelBuilder.Entity<Event>().Property(x => x.Provider).IsRequired();
 
             // Foreign Key ArticleId
@@ -66,40 +64,34 @@ namespace ChallengeSpaceFlightNews.webApi.Data
             #region Articles
 
             modelBuilder.Entity<Article>().HasKey(x => x.Id);
+            modelBuilder.Entity<Article>().Property(x => x.Id).UseHiLo();
 
             // Title
             modelBuilder.Entity<Article>().Property(x => x.Title).HasMaxLength(200);
-            modelBuilder.Entity<Article>().Property(x => x.Title).HasColumnType("varchar(200)");
             modelBuilder.Entity<Article>().Property(x => x.Title).IsRequired();
 
             // Url
             modelBuilder.Entity<Article>().Property(x => x.Url).HasMaxLength(200);
-            modelBuilder.Entity<Article>().Property(x => x.Url).HasColumnType("varchar(200)");
             modelBuilder.Entity<Article>().Property(x => x.Url).IsRequired();
 
             // ImageUrl
             modelBuilder.Entity<Article>().Property(x => x.ImageUrl).HasMaxLength(300);
-            modelBuilder.Entity<Article>().Property(x => x.ImageUrl).HasColumnType("varchar(300)");
             modelBuilder.Entity<Article>().Property(x => x.ImageUrl).IsRequired();
 
             // NewsSites
             modelBuilder.Entity<Article>().Property(x => x.NewsSite).HasMaxLength(50);
-            modelBuilder.Entity<Article>().Property(x => x.NewsSite).HasColumnType("varchar(50)");
             modelBuilder.Entity<Article>().Property(x => x.NewsSite).IsRequired();
 
             // Summary
             modelBuilder.Entity<Article>().Property(x => x.Summary).HasMaxLength(400);
-            modelBuilder.Entity<Article>().Property(x => x.Summary).HasColumnType("varchar(400)");
             modelBuilder.Entity<Article>().Property(x => x.Summary).IsRequired();
 
             // PublishedAt
-            modelBuilder.Entity<Article>().Property(x => x.PublishedAt).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<Article>().Property(x => x.PublishedAt).HasDefaultValueSql("NOW()");
 
             // UpdatedAt
-            modelBuilder.Entity<Article>().Property(x => x.UpdatedAt).HasColumnType("datetime2");
 
             // Featured
-            modelBuilder.Entity<Article>().Property(x => x.Featured).HasColumnType("bit");
             modelBuilder.Entity<Article>().Property(x => x.Featured).IsRequired();
 
             #endregion

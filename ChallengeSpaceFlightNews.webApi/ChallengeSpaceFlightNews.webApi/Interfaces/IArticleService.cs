@@ -9,10 +9,10 @@ namespace ChallengeSpaceFlightNews.webApi.Interfaces
 {
     public interface IArticleService
     {
-        Task<IEnumerable<Article>> ListarArticlesAsync();
+        Task<IEnumerable<Article>> ListarArticlesAsync(int? inicial, int? qtd);
         Task<Article> CadastrarAsync(CriarArticleDTO novoArticle);
-        Task<Article> BuscarPorId(string id);
-        Task<bool> DeletarAsync(string id);
-        Task<Article> AlterarAsync(string id, AlterarArticleDTO alteracoes);
+        Task<Article> BuscarPorId(int id);
+        Task<bool> DeletarAsync(int id);
+        Task<Article> AlterarAsync(int id, AlterarArticleDTO alteracoes);
     }
 }

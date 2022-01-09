@@ -39,9 +39,9 @@ namespace ChallengeSpaceFlightNews.webApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Article>>> Listar()
+        public async Task<ActionResult<IEnumerable<Article>>> Listar(int? inicial, int? qtd)
         {
-            return Ok( await _articleService.ListarArticlesAsync()); ;
+            return Ok( await _articleService.ListarArticlesAsync(inicial, qtd)); ;
         }
 
         [HttpPost]
@@ -57,7 +57,7 @@ namespace ChallengeSpaceFlightNews.webApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Article>> BuscarPorId(string id)
+        public async Task<ActionResult<Article>> BuscarPorId(int id)
         {
             var resposta = await _articleService.BuscarPorId(id);
             if (resposta == null)
@@ -67,7 +67,7 @@ namespace ChallengeSpaceFlightNews.webApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeletarAsync(string id)
+        public async Task<ActionResult> DeletarAsync(int id)
         {
             var resposta = await _articleService.DeletarAsync(id);
 
@@ -78,7 +78,7 @@ namespace ChallengeSpaceFlightNews.webApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Article>> AlterarAsync(string id, AlterarArticleDTO alteracoes)
+        public async Task<ActionResult<Article>> AlterarAsync(int id, AlterarArticleDTO alteracoes)
         {
             alteracoes.Validar();
             if (!alteracoes.IsValid)

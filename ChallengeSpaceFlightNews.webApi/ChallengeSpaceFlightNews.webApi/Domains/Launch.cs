@@ -10,7 +10,7 @@ namespace ChallengeSpaceFlightNews.webApi.Domains
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Provider { get; set; }
 
-        public string ArticleId { get; set; }
+        public int ArticleId { get; set; }
         public Article Article { get; set; }
     }
 }

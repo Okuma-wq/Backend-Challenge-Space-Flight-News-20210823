@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using ChallengeSpaceFlightNews.webApi.Data;
 using Respawn;
@@ -10,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Npgsql;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace SpaceFlightNewsTestes.Integracao.Setup
@@ -26,7 +26,7 @@ namespace SpaceFlightNewsTestes.Integracao.Setup
 			TablesToIgnore = new[]{
 				"_EFMigrationsHistory"
 			},
-			DbAdapter = DbAdapter.SqlServer
+			DbAdapter = DbAdapter.Postgres
 		};
 
 		// Este código será executado antes de cada teste e antes do InitializeAsync
@@ -44,9 +44,9 @@ namespace SpaceFlightNewsTestes.Integracao.Setup
 		{
 			await Context.Database.EnsureCreatedAsync();
 			Context.ChangeTracker.Clear();
-			using var sqlServerConnection= new SqlConnection(Context.StringConnection);
-			await sqlServerConnection.OpenAsync();
-			await Checkpoint.Reset(sqlServerConnection);
+			using var npgsqlConnection= new NpgsqlConnection(Context.StringConnection);
+			await npgsqlConnection.OpenAsync();
+			await Checkpoint.Reset(npgsqlConnection);
 		}
 
 		// O DisposeAsync será executado depois de cada teste

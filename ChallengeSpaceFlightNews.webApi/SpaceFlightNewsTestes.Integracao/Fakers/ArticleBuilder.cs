@@ -12,7 +12,7 @@ namespace SpaceFlightNewsTestes.Integracao.Fakers
     {
         public ArticleBuilder()
         {
-            RuleFor(x => x.Id, faker => faker.Random.Number(1000).ToString());
+            RuleFor(x => x.Id, faker => faker.Random.Number(1000));
             RuleFor(x => x.Title, faker => faker.Name.JobTitle());
             RuleFor(x => x.Url, faker => faker.Internet.Url());
             RuleFor(x => x.ImageUrl, faker => faker.Image.PicsumUrl());
