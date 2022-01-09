@@ -18,9 +18,22 @@ namespace ChallengeSpaceFlightNews.webApi.Repositories
             _context = contexto;
         }
 
+        public async Task<Article> BuscarPorId(string id)
+        {
+            return await _context.Articles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task CadastrarAsync(Article article)
         {
             await _context.Articles.AddAsync(article);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Deletar(Article article)
+        {
+            _context.Articles.Remove(article);
             await _context.SaveChangesAsync();
         }
 

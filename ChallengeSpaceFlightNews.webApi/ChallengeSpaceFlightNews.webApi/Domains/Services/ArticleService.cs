@@ -35,5 +35,20 @@ namespace ChallengeSpaceFlightNews.webApi.Domains.Services
 
             return articleMapeado;
         }
+
+        public async Task<Article> BuscarPorId(string id)
+        {
+            return await _articleRepository.BuscarPorId(id);
+        }
+
+        public async Task<bool> Deletar(string id)
+        {
+            var article = await _articleRepository.BuscarPorId(id);
+            if (article == null)
+                return false;
+
+            await _articleRepository.Deletar(article);
+            return true;
+        }
     }
 }

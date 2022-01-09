@@ -55,5 +55,26 @@ namespace ChallengeSpaceFlightNews.webApi.Controllers
 
             return Created("", resposta);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Article>> BuscarPorId(string id)
+        {
+            var resposta = await _articleService.BuscarPorId(id);
+            if (resposta == null)
+                return NotFound("Não foi possivel encontrar um article com o id procurado");
+
+            return Ok(resposta);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeletarAsync(string id)
+        {
+            var resposta = await _articleService.Deletar(id);
+
+            if (resposta == false)
+                return NotFound("Não foi possivel encontrar um article com o id utilizado");
+
+            return Ok("Article deletado com sucesso!");
+        }
     }
 }

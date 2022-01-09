@@ -10,5 +10,7 @@ namespace ChallengeSpaceFlightNews.webApi.Interfaces
     {
         Task<IEnumerable<Article>> ListarArticlesAsync();
         Task CadastrarAsync(Article article);
+        Task<Article> BuscarPorId(string id);
+        Task Deletar(Article article);
     }
 }

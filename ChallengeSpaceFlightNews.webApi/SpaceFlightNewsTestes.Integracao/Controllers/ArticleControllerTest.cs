@@ -117,5 +117,34 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
         }
         #endregion
 
+        #region Teste BuscarPorId
+
+        [Fact]
+        public async Task BuscarPorIdDeveRetornar200OkQuandoArticleForEncontrado()
+        {
+            var articles = await PersistirArticleNoBanco();
+
+            var article = articles.FirstOrDefault();
+
+            var resposta = await Client.GetAsync($"/Articles/{article.Id}");
+
+            resposta.Should()
+                .Be200Ok();
+        }
+
+        [Fact]
+        public async Task BuscarPorIdDeveRetornarOArticleQueFoiBuscadoNoBanco()
+        {
+            var articles = await PersistirArticleNoBanco();
+            var article = articles.FirstOrDefault();
+
+            var resposta = await Client.GetFromJsonAsync<Article>($"/Articles/{article.Id}");
+
+            resposta.Should()
+                .BeEquivalentTo(article);
+        }
+
+        #endregion
+
     }
 }
