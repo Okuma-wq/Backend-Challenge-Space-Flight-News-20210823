@@ -13,6 +13,6 @@ namespace ChallengeSpaceFlightNews.webApi.Interfaces
         Task<Article> CadastrarAsync(CriarArticleDTO novoArticle);
         Task<Article> BuscarPorId(string id);
         Task<bool> DeletarAsync(string id);
-        Task<Article> AlterarAsync(string id, AlterarArticleDTO articleAlterado);
+        Task<Article> AlterarAsync(string id, AlterarArticleDTO alteracoes);
     }
 }

@@ -2,11 +2,13 @@
 using ChallengeSpaceFlightNews.webApi.DTOs;
 using ChallengeSpaceFlightNews.webApi.Interfaces;
 using FluentAssertions;
+using Newtonsoft.Json;
 using SpaceFlightNewsTestes.Integracao.Fakers;
 using SpaceFlightNewsTestes.Integracao.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -187,6 +189,71 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
         public async Task DeletarDeveRetornar404NotFoundSeOIdUtilizadoNaoCorresponderAUmArticle()
         {
             var resposta = await Client.DeleteAsync($"/Articles/1");
+
+            resposta.Should()
+                .Be404NotFound();
+        }
+
+        #endregion
+
+        #region Teste Alterar
+
+        [Fact]
+        public async Task AlterarDeveRetornar200OkSeOsDadosForemPreenchidosCorretamente()
+        {
+            var articles = await PersistirArticleNoBanco();
+            var article = articles.FirstOrDefault();
+
+            var alteracoes = new AlterarArticleDTOBuilder().Generate();
+
+            var content = JsonConvert.SerializeObject(alteracoes);
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var resposta = await Client.PutAsync($"/Articles/{article.Id}", stringContent);
+
+            resposta.Should()
+                .Be200Ok();
+        }
+
+        [Fact]
+        public async Task AlterarDeveAlterarOArticleSalvoNoBanco()
+        {
+            var articles = await PersistirArticleNoBanco();
+            var article = articles.FirstOrDefault();
+
+            var alteracoes = new AlterarArticleDTOBuilder().Generate();
+
+            var content = JsonConvert.SerializeObject(alteracoes);
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var resposta = await Client.PutAsync($"/Articles/{article.Id}", stringContent);
+            var articleAlterado = await resposta.Content.ReadFromJsonAsync<Article>();
+
+            var articleNobanco = await _articleRepository.BuscarPorIdAsync(article.Id);
+
+            articleNobanco.Should()
+                .BeEquivalentTo(articleAlterado);
+        }
+
+        [Fact]
+        public async Task AlterarDeveRetornar400BadRequestSeOsDadosNaoForemPreenchidosCorretamente()
+        {
+            var alteracoes = new AlterarArticleDTO();
+
+            var content = JsonConvert.SerializeObject(alteracoes);
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var resposta = await Client.PutAsync($"/Articles/1", stringContent);
+
+            resposta.Should()
+                .Be400BadRequest();
+        }
+
+        [Fact]
+        public async Task AlterarDeveRetornar404NotFoundSeOIdFornecidoNaoCorresponderAUmArticleSalvoNoBanco()
+        {
+            var alteracoes = new AlterarArticleDTOBuilder().Generate();
+
+            var content = JsonConvert.SerializeObject(alteracoes);
+            var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var resposta = await Client.PutAsync($"/Articles/1", stringContent);
 
             resposta.Should()
                 .Be404NotFound();

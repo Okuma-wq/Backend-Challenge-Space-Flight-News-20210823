@@ -51,13 +51,13 @@ namespace ChallengeSpaceFlightNews.webApi.Domains.Services
             return true;
         }
 
-        public async Task<Article> AlterarAsync(string id, AlterarArticleDTO articleAlterado)
+        public async Task<Article> AlterarAsync(string id, AlterarArticleDTO alteracoes)
         {
             var articleNoBanco = await _articleRepository.BuscarPorIdAsync(id);
             if (articleNoBanco == null)
                 return null;
 
-            var articleMapeado = _mapper.Map<Article>(articleAlterado);
+            var articleMapeado = _mapper.Map<Article>(alteracoes);
             articleMapeado.Id = id;
             articleMapeado.UpdatedAt = DateTime.Now;
             articleMapeado.PublishedAt = articleNoBanco.PublishedAt;
