@@ -69,12 +69,26 @@ namespace ChallengeSpaceFlightNews.webApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletarAsync(string id)
         {
-            var resposta = await _articleService.Deletar(id);
+            var resposta = await _articleService.DeletarAsync(id);
 
             if (resposta == false)
                 return NotFound("Não foi possivel encontrar um article com o id utilizado");
 
             return Ok("Article deletado com sucesso!");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Article>> AlterarAsync(string id, AlterarArticleDTO articleAlterado)
+        {
+            articleAlterado.Validar();
+            if (!articleAlterado.IsValid)
+                return BadRequest(articleAlterado.Notifications);
+
+            var articleRetornado = await _articleService.AlterarAsync(id, articleAlterado);
+            if (articleRetornado == null)
+                return NotFound("O id fornecido não corresponde a nenhum article salvo");
+
+            return Ok(articleRetornado);
         }
     }
 }

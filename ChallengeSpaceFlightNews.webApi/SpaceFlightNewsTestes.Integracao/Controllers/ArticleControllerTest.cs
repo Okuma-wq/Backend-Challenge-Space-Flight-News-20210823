@@ -177,7 +177,7 @@ namespace SpaceFlightNewsTestes.Integracao.Controllers
 
             await Client.DeleteAsync($"/Articles/{article.Id}");
 
-            var retorno = await _articleRepository.BuscarPorId(article.Id);
+            var retorno = await _articleRepository.BuscarPorIdAsync(article.Id);
 
             retorno.Should()
                 .BeNull();

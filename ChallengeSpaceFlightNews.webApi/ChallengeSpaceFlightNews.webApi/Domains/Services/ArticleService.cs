@@ -38,17 +38,32 @@ namespace ChallengeSpaceFlightNews.webApi.Domains.Services
 
         public async Task<Article> BuscarPorId(string id)
         {
-            return await _articleRepository.BuscarPorId(id);
+            return await _articleRepository.BuscarPorIdAsync(id);
         }
 
-        public async Task<bool> Deletar(string id)
+        public async Task<bool> DeletarAsync(string id)
         {
-            var article = await _articleRepository.BuscarPorId(id);
+            var article = await _articleRepository.BuscarPorIdAsync(id);
             if (article == null)
                 return false;
 
             await _articleRepository.Deletar(article);
             return true;
+        }
+
+        public async Task<Article> AlterarAsync(string id, AlterarArticleDTO articleAlterado)
+        {
+            var articleNoBanco = await _articleRepository.BuscarPorIdAsync(id);
+            if (articleNoBanco == null)
+                return null;
+
+            var articleMapeado = _mapper.Map<Article>(articleAlterado);
+            articleMapeado.Id = id;
+            articleMapeado.UpdatedAt = DateTime.Now;
+            articleMapeado.PublishedAt = articleNoBanco.PublishedAt;
+
+            await _articleRepository.AlterarAsync(articleMapeado);
+            return articleMapeado;
         }
     }
 }

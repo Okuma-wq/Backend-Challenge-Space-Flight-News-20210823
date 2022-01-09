@@ -13,6 +13,7 @@ namespace ChallengeSpaceFlightNews.webApi.Mapping
         public ArticleMapping()
         {
             CreateMap<CriarArticleDTO, Article>();
+            CreateMap<AlterarArticleDTO, Article>();
         }
     }
 }
